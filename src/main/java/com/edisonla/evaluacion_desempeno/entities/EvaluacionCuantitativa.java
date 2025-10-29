@@ -43,14 +43,4 @@ public class EvaluacionCuantitativa {
     private Evaluado evaluado;
 
 
-
-    private  double  getCalculoCompeticiones(List<Competencia> competencias) {
-        return (competencias.stream().mapToDouble(Competencia::getCalificacion).sum() / competencias.size());  // retornamos el promedio subtotal de todas las calificaciones para esas cuntitativas
-    }
-
-    public double getResultadoCompeticiones(){
-        return this.getCalculoCompeticiones(this.competencias);
-    }
-
-
 }

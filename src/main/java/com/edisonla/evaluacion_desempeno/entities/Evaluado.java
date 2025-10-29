@@ -50,15 +50,5 @@ public class Evaluado {
     @OneToMany(mappedBy = "evaluador", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Builder.Default
     private List<EvaluacionCualitativa> evaluacionesCualitativas = new ArrayList<>();
-
-
-
-    private double getCalculoCuantitativas(List<EvaluacionCuantitativa> evC) {
-
-        return (evC.stream().mapToDouble(EvaluacionCuantitativa::getResultado).sum() / evC.size());
-    }
-
-    public double getResultadoActual(){
-        return this.getCalculoCuantitativas(this.evaluacionesCuantitativas);
-    }
+    
 }
