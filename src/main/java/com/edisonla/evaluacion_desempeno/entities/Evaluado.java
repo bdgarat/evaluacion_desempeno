@@ -53,8 +53,12 @@ public class Evaluado {
 
 
 
-    public double getResultadoCuantitativas(List<EvaluacionCualitativa> evaluacionesCualitativas) {
+    private double getCalculoCuantitativas(List<EvaluacionCuantitativa> evC) {
 
-        return 0;
+        return (evC.stream().mapToDouble(EvaluacionCuantitativa::getResultado).sum() / evC.size());
+    }
+
+    public double getResultadoActual(){
+        return this.getCalculoCuantitativas(this.evaluacionesCuantitativas);
     }
 }

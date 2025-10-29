@@ -30,10 +30,4 @@ public class Competencia {
     private EvaluacionCuantitativa evaluacionCuantitativa;
 
 
-
-
-    public double  getCalificacion(){
-        return this.calificacion;
-    }
-
 }

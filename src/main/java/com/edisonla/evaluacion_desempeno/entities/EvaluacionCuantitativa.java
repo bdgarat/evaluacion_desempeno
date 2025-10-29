@@ -30,6 +30,9 @@ public class EvaluacionCuantitativa {
     @Column(name = "fecha")
     private LocalDateTime fecha;
 
+    @Column(name = "resultado")
+    private double resultado;
+
     @OneToMany(mappedBy = "evaluacionCuantitativa", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Builder.Default
     private List<Competencia> competencias = new ArrayList<>();
@@ -41,9 +44,13 @@ public class EvaluacionCuantitativa {
 
 
 
-    public double  getResultadoCompeticiones(List<Competencia> competencias) {
+    private  double  getCalculoCompeticiones(List<Competencia> competencias) {
         return (competencias.stream().mapToDouble(Competencia::getCalificacion).sum() / competencias.size());  // retornamos el promedio subtotal de todas las calificaciones para esas cuntitativas
-
     }
+
+    public double getResultadoCompeticiones(){
+        return this.getCalculoCompeticiones(this.competencias);
+    }
+
 
 }
