@@ -22,10 +22,15 @@ public class Competencia {
     private String descripcion;
 
     @Column(name = "calificacion")
-    private String calificacion;
+    private float calificacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evaluacion_cuantitativa_id")
     @ToString.Exclude
     private EvaluacionCuantitativa evaluacionCuantitativa;
+
+
+
+
+
 }

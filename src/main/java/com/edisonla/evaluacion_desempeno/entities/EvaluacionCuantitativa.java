@@ -38,4 +38,6 @@ public class EvaluacionCuantitativa {
     @JoinColumn(name = "evaluado_id")
     @ToString.Exclude
     private Evaluado evaluado;
+    
+
 }
