@@ -4,17 +4,17 @@ import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaDto;
 import com.edisonla.evaluacion_desempeno.entities.CompetenciaCualitativa;
 import com.edisonla.evaluacion_desempeno.mappers.CompetenciaCualitativaMapper;
 import com.edisonla.evaluacion_desempeno.repositories.CompetenciaCualitativaRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class CompetenciaCualitativaService {
 
-    @Autowired
-    private CompetenciaCualitativaRepository competenciaCualitativaRepository;
+    private final CompetenciaCualitativaRepository competenciaCualitativaRepository;
 
-    @Autowired
-    private CompetenciaCualitativaMapper competenciaCualitativaMapper;
+    private final CompetenciaCualitativaMapper competenciaCualitativaMapper;
 
     public Iterable<CompetenciaCualitativaDto> getAll() {
         return competenciaCualitativaRepository.findAll()

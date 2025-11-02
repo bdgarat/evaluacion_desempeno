@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: evaluacion_desempeno
-  datasource:
-    url: jdbc:mysql://localhost:3306/evaluacion_desempeno_dev?createDatabaseIfNotExist=true
-    username: root
-    password: 1234
-  jpa:
-    show-sql: true

@@ -40,7 +40,7 @@ public class CompetenciaCuantitativa {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evaluado_id")
     @ToString.Exclude
-    private Evaluado evaluado;
+    private Evaluado evaluador;
 
 
 }

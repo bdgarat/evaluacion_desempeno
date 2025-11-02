@@ -4,17 +4,17 @@ import com.edisonla.evaluacion_desempeno.dtos.ComportamientoDto;
 import com.edisonla.evaluacion_desempeno.entities.Comportamiento;
 import com.edisonla.evaluacion_desempeno.mappers.ComportamientoMapper;
 import com.edisonla.evaluacion_desempeno.repositories.ComportamientoRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class ComportamientoService {
 
-    @Autowired
-    private ComportamientoRepository comportamientoRepository;
+    private final ComportamientoRepository comportamientoRepository;
 
-    @Autowired
-    private ComportamientoMapper comportamientoMapper;
+    private final ComportamientoMapper comportamientoMapper;
 
     public Iterable<ComportamientoDto> getAll() {
         return comportamientoRepository.findAll()

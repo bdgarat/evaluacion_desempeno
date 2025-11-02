@@ -7,4 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface CompetenciaCualitativaMapper {
     CompetenciaCualitativaDto toDto(CompetenciaCualitativa competenciaCualitativa);
+    CompetenciaCualitativa toEntity(CompetenciaCualitativaDto dto);
 }

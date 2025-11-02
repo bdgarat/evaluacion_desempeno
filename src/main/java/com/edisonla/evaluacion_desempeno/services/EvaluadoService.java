@@ -4,17 +4,17 @@ import com.edisonla.evaluacion_desempeno.dtos.EvaluadoDto;
 import com.edisonla.evaluacion_desempeno.entities.Evaluado;
 import com.edisonla.evaluacion_desempeno.mappers.EvaluadoMapper;
 import com.edisonla.evaluacion_desempeno.repositories.EvaluadoRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class EvaluadoService {
 
-    @Autowired
-    private EvaluadoRepository evaluadoRepository;
+    private final EvaluadoRepository evaluadoRepository;
 
-    @Autowired
-    private EvaluadoMapper evaluadoMapper;
+    private final EvaluadoMapper evaluadoMapper;
 
     public Iterable<EvaluadoDto> getAll() {
         return evaluadoRepository.findAll()
