@@ -24,6 +24,9 @@ public class CompetenciaCualitativa {
     @Column(name = "devolucion")
     private String devolucion;
 
+    @Column (name= "validado")
+    private boolean validado;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evaluado_id")
     @ToString.Exclude

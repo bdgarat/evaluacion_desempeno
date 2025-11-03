@@ -33,6 +33,9 @@ public class CompetenciaCuantitativa {
     @Column(name = "resultado")
     private double resultado;
 
+    @Column (name= "validado")
+    private boolean validado;
+
     @OneToMany(mappedBy = "competenciaCuantitativa", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Builder.Default
     private List<Comportamiento> comportamientos = new ArrayList<>();
