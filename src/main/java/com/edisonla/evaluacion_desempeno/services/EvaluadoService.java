@@ -6,8 +6,10 @@ import com.edisonla.evaluacion_desempeno.entities.Evaluado;
 import com.edisonla.evaluacion_desempeno.mappers.EvaluadoMapper;
 import com.edisonla.evaluacion_desempeno.mappers.EvaluadoRequestMapper;
 import com.edisonla.evaluacion_desempeno.repositories.EvaluadoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,35 +28,32 @@ public class EvaluadoService {
     }
 
     public EvaluadoDto get(Long id) {
-        Evaluado e = repository.findById(id).orElse(null);
-        if (e == null) { return null; }
+        Evaluado e = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con id: " + id));
         return EvaluadoMapper.toDto(e);
     }
 
+    @Transactional
     public EvaluadoDto create(EvaluadoRequest dto) {
         Evaluado e = repository.save(EvaluadoRequestMapper.toEntity(dto));
         return EvaluadoMapper.toDto(e);
     }
 
+    @Transactional
     public EvaluadoRequest update(Long id, EvaluadoRequest dto) {
-        Evaluado original = repository.findById(id).orElse(null);
-        if(original == null) {
-            return null;
-        } else {
-            Evaluado updated = EvaluadoRequestMapper.toEntity(dto);
-            updated.setId(original.getId());
-            Evaluado res = repository.save(updated);
-            return EvaluadoRequestMapper.toDto(res);
-        }
+        Evaluado original = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con id: " + id));
+        Evaluado updated = EvaluadoRequestMapper.toEntity(dto);
+        updated.setId(original.getId());
+        Evaluado res = repository.save(updated);
+        return EvaluadoRequestMapper.toDto(res);
     }
 
-    public boolean delete(Long id) {
-        Evaluado evaluado = repository.findById(id).orElse(null);
-        if (evaluado == null) {
-            return false;
-        } else {
-            repository.delete(evaluado);
-            return true;
-        }
+    @Transactional
+    public void delete(Long id) {
+        Evaluado evaluado = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con id: " + id));
+        repository.delete(evaluado);
     }
+
 }

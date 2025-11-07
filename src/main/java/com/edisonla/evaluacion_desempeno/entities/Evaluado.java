@@ -48,11 +48,11 @@ public class Evaluado {
     @Column(name = "es_admin")
     private boolean admin;
 
-    @OneToMany(mappedBy = "evaluador", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "evaluador", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<CompetenciaCuantitativa> competenciasCuantitativas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "evaluador", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "evaluador", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<CompetenciaCualitativa> competenciasCualitativas = new ArrayList<>();
 

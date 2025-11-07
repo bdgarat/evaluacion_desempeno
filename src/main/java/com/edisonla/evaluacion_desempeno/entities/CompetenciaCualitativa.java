@@ -28,7 +28,7 @@ public class CompetenciaCualitativa {
     @Column (name= "validado")
     private boolean validado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "evaluado_id")
     @ToString.Exclude
     private Evaluado evaluador;
