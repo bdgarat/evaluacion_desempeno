@@ -3,9 +3,11 @@ package com.edisonla.evaluacion_desempeno.services;
 import com.edisonla.evaluacion_desempeno.dtos.ComportamientoDto;
 import com.edisonla.evaluacion_desempeno.dtos.ComportamientoRequest;
 import com.edisonla.evaluacion_desempeno.entities.Comportamiento;
+import com.edisonla.evaluacion_desempeno.entities.Evaluado;
 import com.edisonla.evaluacion_desempeno.mappers.ComportamientoMapper;
 import com.edisonla.evaluacion_desempeno.mappers.ComportamientoRequestMapper;
 import com.edisonla.evaluacion_desempeno.mappers.EvaluadoMapper;
+import com.edisonla.evaluacion_desempeno.mappers.EvaluadoRequestMapper;
 import com.edisonla.evaluacion_desempeno.repositories.ComportamientoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,29 +29,30 @@ public class ComportamientoService {
         return repository.findById(id).orElse(null);
     }
 
-    public ComportamientoRequest create(ComportamientoRequest dto) {
-        repository.save(ComportamientoRequestMapper.toEntity(dto));
-        //return ComportamientoRequestMapper.toDto(repository.findByNombre(dto.nombre()));
-        return null;
+    public ComportamientoDto create(ComportamientoRequest dto) {
+        Comportamiento res = repository.save(ComportamientoRequestMapper.toEntity(dto));
+        return ComportamientoMapper.toDto(res);
     }
 
-    public ComportamientoDto update(Long id, ComportamientoDto dto) {
-        Comportamiento comportamiento = repository.findById(id).orElse(null);
-        if(comportamiento == null) {
+    public ComportamientoRequest update(Long id, ComportamientoRequest dto) {
+        Comportamiento original = repository.findById(id).orElse(null);
+        if(original == null) {
             return null;
         } else {
-            repository.save(comportamiento);
-            return ComportamientoMapper.toDto(comportamiento);
+            Comportamiento updated = ComportamientoRequestMapper.toEntity(dto);
+            updated.setId(original.getId());
+            Comportamiento res = repository.save(updated);
+            return ComportamientoRequestMapper.toDto(res);
         }
     }
 
-    public ComportamientoDto delete(Long id) {
+    public boolean delete(Long id) {
         Comportamiento comportamiento = repository.findById(id).orElse(null);
         if (comportamiento == null) {
-            return null;
+            return false;
         } else {
             repository.delete(comportamiento);
-            return ComportamientoMapper.toDto(comportamiento);
+            return true;
         }
     }
 }

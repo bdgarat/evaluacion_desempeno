@@ -1,8 +1,13 @@
 package com.edisonla.evaluacion_desempeno.services;
 
 import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaDto;
+import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaRequest;
+import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCuantitativaRequest;
 import com.edisonla.evaluacion_desempeno.entities.CompetenciaCualitativa;
+import com.edisonla.evaluacion_desempeno.entities.CompetenciaCuantitativa;
 import com.edisonla.evaluacion_desempeno.mappers.CompetenciaCualitativaMapper;
+import com.edisonla.evaluacion_desempeno.mappers.CompetenciaCualitativaRequestMapper;
+import com.edisonla.evaluacion_desempeno.mappers.CompetenciaCuantitativaRequestMapper;
 import com.edisonla.evaluacion_desempeno.repositories.CompetenciaCualitativaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,27 +29,29 @@ public class CompetenciaCualitativaService {
         return repository.findById(id).orElse(null);
     }
 
-    public CompetenciaCualitativaDto create(CompetenciaCualitativaDto dto) {
-        return CompetenciaCualitativaMapper.toDto(repository.save(CompetenciaCualitativaMapper.toEntity(dto)));
+    public CompetenciaCualitativaDto create(CompetenciaCualitativaRequest dto) {
+        return CompetenciaCualitativaMapper.toDto(repository.save(CompetenciaCualitativaRequestMapper.toEntity(dto)));
     }
 
-    public CompetenciaCualitativaDto update(Long id, CompetenciaCualitativaDto dto) {
+    public CompetenciaCualitativaRequest update(Long id, CompetenciaCualitativaRequest dto) {
         CompetenciaCualitativa cc = repository.findById(id).orElse(null);
         if(cc == null) {
             return null;
         } else {
-            repository.save(cc);
-            return CompetenciaCualitativaMapper.toDto(cc);
+            CompetenciaCualitativa updated = CompetenciaCualitativaRequestMapper.toEntity(dto);
+            updated.setId(cc.getId());
+            CompetenciaCualitativa res = repository.save(updated);
+            return CompetenciaCualitativaRequestMapper.toDto(res);
         }
     }
 
-    public CompetenciaCualitativaDto delete(Long id) {
+    public boolean delete(Long id) {
         CompetenciaCualitativa cc = repository.findById(id).orElse(null);
         if (cc == null) {
-            return null;
+            return false;
         } else {
             repository.delete(cc);
-            return CompetenciaCualitativaMapper.toDto(cc);
+            return true;
         }
     }
 }

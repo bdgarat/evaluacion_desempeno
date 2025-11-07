@@ -37,11 +37,13 @@ public class EvaluadoService {
     }
 
     public EvaluadoRequest update(Long id, EvaluadoRequest dto) {
-        Evaluado evaluado = repository.findById(id).orElse(null);
-        if(evaluado == null) {
+        Evaluado original = repository.findById(id).orElse(null);
+        if(original == null) {
             return null;
         } else {
-            Evaluado res = repository.save(evaluado);
+            Evaluado updated = EvaluadoRequestMapper.toEntity(dto);
+            updated.setId(original.getId());
+            Evaluado res = repository.save(updated);
             return EvaluadoRequestMapper.toDto(res);
         }
     }

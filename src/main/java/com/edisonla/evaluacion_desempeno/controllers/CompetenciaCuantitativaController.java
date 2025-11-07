@@ -1,6 +1,7 @@
 package com.edisonla.evaluacion_desempeno.controllers;
 
 import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCuantitativaDto;
+import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCuantitativaRequest;
 import com.edisonla.evaluacion_desempeno.entities.CompetenciaCuantitativa;
 import com.edisonla.evaluacion_desempeno.mappers.CompetenciaCuantitativaMapper;
 import com.edisonla.evaluacion_desempeno.services.CompetenciaCuantitativaService;
@@ -38,7 +39,7 @@ public class CompetenciaCuantitativaController {
     }
 
     @PostMapping
-    public ResponseEntity<CompetenciaCuantitativaDto> create(@RequestBody CompetenciaCuantitativaDto request,
+    public ResponseEntity<CompetenciaCuantitativaDto> create(@RequestBody CompetenciaCuantitativaRequest request,
                                                     UriComponentsBuilder uriBuilder) {
         CompetenciaCuantitativaDto dto = service.create(request);
         URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(dto.id()).toUri();
@@ -47,9 +48,9 @@ public class CompetenciaCuantitativaController {
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<CompetenciaCuantitativaDto> update(@PathVariable Long id,
-                                                             @RequestBody CompetenciaCuantitativaDto request) {
-        CompetenciaCuantitativaDto dto = service.update(id, request);
+    public ResponseEntity<CompetenciaCuantitativaRequest> update(@PathVariable Long id,
+                                                             @RequestBody CompetenciaCuantitativaRequest request) {
+        CompetenciaCuantitativaRequest dto = service.update(id, request);
         if(dto == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -59,8 +60,8 @@ public class CompetenciaCuantitativaController {
 
     @DeleteMapping ("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        CompetenciaCuantitativaDto dto = service.delete(id);
-        if (dto == null) {
+        boolean deleted = service.delete(id);
+        if (!deleted) {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.noContent().build();

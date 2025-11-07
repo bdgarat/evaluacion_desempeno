@@ -17,10 +17,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // desactivar para APIs REST (solo en dev o con token)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/evaluados/**").permitAll() // opcional: permitir
-                        .requestMatchers("/api/comportamiento/**").permitAll() // opcional: permitir
-                        .requestMatchers("/api/competencia/cuantitativa/**").permitAll() // opcional: permitir
-                        .requestMatchers("/api/competencia/cualitativa/**").permitAll() // opcional: permitir
+                        .requestMatchers("/api/**").permitAll() // Abierto para todos los endpoints /api
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()); // mantiene basic auth para otras rutas

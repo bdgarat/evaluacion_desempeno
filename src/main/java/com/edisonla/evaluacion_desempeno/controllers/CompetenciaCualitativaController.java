@@ -2,6 +2,7 @@ package com.edisonla.evaluacion_desempeno.controllers;
 
 
 import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaDto;
+import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaRequest;
 import com.edisonla.evaluacion_desempeno.entities.CompetenciaCualitativa;
 import com.edisonla.evaluacion_desempeno.mappers.CompetenciaCualitativaMapper;
 import com.edisonla.evaluacion_desempeno.services.CompetenciaCualitativaService;
@@ -40,7 +41,7 @@ public class CompetenciaCualitativaController {
     }
 
     @PostMapping
-    public ResponseEntity<CompetenciaCualitativaDto> create(@RequestBody CompetenciaCualitativaDto request,
+    public ResponseEntity<CompetenciaCualitativaDto> create(@RequestBody CompetenciaCualitativaRequest request,
                                                              UriComponentsBuilder uriBuilder) {
         CompetenciaCualitativaDto dto = service.create(request);
         URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(dto.id()).toUri();
@@ -49,9 +50,9 @@ public class CompetenciaCualitativaController {
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<CompetenciaCualitativaDto> update(@PathVariable Long id,
-                                                             @RequestBody CompetenciaCualitativaDto request) {
-        CompetenciaCualitativaDto dto = service.update(id, request);
+    public ResponseEntity<CompetenciaCualitativaRequest> update(@PathVariable Long id,
+                                                             @RequestBody CompetenciaCualitativaRequest request) {
+        CompetenciaCualitativaRequest dto = service.update(id, request);
         if(dto == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -61,8 +62,8 @@ public class CompetenciaCualitativaController {
 
     @DeleteMapping ("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        CompetenciaCualitativaDto dto = service.delete(id);
-        if (dto == null) {
+        boolean deleted = service.delete(id);
+        if (!deleted) {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.noContent().build();

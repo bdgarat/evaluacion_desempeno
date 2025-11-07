@@ -39,17 +39,17 @@ public class ComportamientoController {
     }
 
     @PostMapping
-    public ResponseEntity<ComportamientoRequest> create(@RequestBody ComportamientoRequest request,
+    public ResponseEntity<ComportamientoDto> create(@RequestBody ComportamientoRequest request,
                                               UriComponentsBuilder uriBuilder) {
-        ComportamientoRequest dto = service.create(request);
-        URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(123).toUri();
+        ComportamientoDto dto = service.create(request);
+        URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(dto.id()).toUri();
         return ResponseEntity.created(location).body(dto);
 
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<ComportamientoDto> update(@PathVariable Long id, @RequestBody ComportamientoDto request) {
-        ComportamientoDto dto = service.update(id, request);
+    public ResponseEntity<ComportamientoRequest> update(@PathVariable Long id, @RequestBody ComportamientoRequest request) {
+        ComportamientoRequest dto = service.update(id, request);
         if(dto == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -59,8 +59,8 @@ public class ComportamientoController {
 
     @DeleteMapping ("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        ComportamientoDto dto = service.delete(id);
-        if (dto == null) {
+        boolean deleted = service.delete(id);
+        if (!deleted) {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.noContent().build();
