@@ -47,7 +47,7 @@ public class CompetenciaCuantitativaController {
                                          UriComponentsBuilder uriBuilder) {
         try {
             CompetenciaCuantitativaDto dto = service.create(evaluadoId, request);
-            URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(dto.id()).toUri();
+            URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(evaluadoId, dto.id()).toUri();
             return ResponseEntity.created(location).body(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));

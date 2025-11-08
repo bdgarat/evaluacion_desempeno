@@ -48,7 +48,7 @@ public class ComportamientoController {
                                               UriComponentsBuilder uriBuilder) {
         try {
             ComportamientoDto dto = service.create(ccId, request);
-            URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(dto.id()).toUri();
+            URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(ccId, dto.id()).toUri();
             return ResponseEntity.created(location).body(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
