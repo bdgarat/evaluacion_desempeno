@@ -105,6 +105,9 @@ public class Evaluado {
         this.mail = mail;
     }
 
+    public Evaluado(String nombre, String apellido, Date incorporacion, int legajo, double v, String username, String mail) {
+    }
+
     public void addCompetenciaCuantitativa(CompetenciaCuantitativa competencia) {
         this.competenciasCuantitativas.add(competencia);
         competencia.setEvaluador(this);

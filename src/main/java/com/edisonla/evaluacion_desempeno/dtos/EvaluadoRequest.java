@@ -2,6 +2,13 @@ package com.edisonla.evaluacion_desempeno.dtos;
 
 import java.util.Date;
 
-public record EvaluadoRequest(String nombre, String apellido, Date incorporacion, int legajo, double resultadoFinal, String username, String mail, boolean admin) {
+public record EvaluadoRequest(String nombre,
+                              String apellido,
+                              Date incorporacion,
+                              int legajo,
+                              double resultadoFinal,
+                              String mail,
+                              boolean admin) {
 }
+
 
