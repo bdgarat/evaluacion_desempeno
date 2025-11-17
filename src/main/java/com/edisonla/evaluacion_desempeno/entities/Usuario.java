@@ -6,8 +6,6 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,12 +19,17 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
+
+    @Column(name = "email", unique = true)
+    private String email;
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "admin")
+    private boolean admin;
 
     // Todos los evaluados donde este usuario es el evaluador
     @OneToMany(mappedBy = "evaluador", fetch = FetchType.LAZY)
@@ -35,8 +38,5 @@ public class Usuario {
     // Todos los evaluados donde este usuario es el validador
     @OneToMany(mappedBy = "validador", fetch = FetchType.LAZY)
     private List<Evaluado> validaciones = new ArrayList<>();
-
-
-
 
 }

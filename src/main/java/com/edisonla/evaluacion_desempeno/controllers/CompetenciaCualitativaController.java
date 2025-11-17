@@ -20,6 +20,7 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/evaluados/{evaluadoId}/competencias-cualitativas")
+@CrossOrigin(origins = "*")
 public class CompetenciaCualitativaController {
 
     @Autowired

@@ -1,0 +1,49 @@
+package com.edisonla.evaluacion_desempeno.controllers;
+
+import com.edisonla.evaluacion_desempeno.dtos.LoginRequest;
+import com.edisonla.evaluacion_desempeno.dtos.RegisterRequest;
+import com.edisonla.evaluacion_desempeno.dtos.TokenResponse;
+import com.edisonla.evaluacion_desempeno.services.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    @Autowired
+    private AuthService service;
+
+
+    @PostMapping("/register")
+    public ResponseEntity<TokenResponse> register (@RequestBody final RegisterRequest request)
+    {
+        final TokenResponse token = service.register(request);
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/login")
+    public final ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request)
+    {
+        final TokenResponse token = service.login(request);
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponse> refreshToken(@RequestParam Map<String, String> params )
+    {
+        return service.refreshToken(params);
+    }
+
+    @GetMapping("/validate")
+    public Integer validate(@RequestParam String token)
+    {
+        return service.validate(token);
+    }
+}

@@ -5,11 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface EvaluadoRepository extends JpaRepository<Evaluado, Long> {
     List<Evaluado> findAllByIncorporacion(Date fecha);
-    Evaluado findByLegajo(int legajo);
-    Evaluado findByNombre(String nombre);
-    Evaluado findByApellido(String apellido);
-    Evaluado findByMail(String mail);
+    Optional<Evaluado> findByLegajo(int legajo);
+    Optional<Evaluado> findByNombre(String nombre);
+    Optional<Evaluado> findByApellido(String apellido);
+    Optional<Evaluado> findByMail(String mail);
 }

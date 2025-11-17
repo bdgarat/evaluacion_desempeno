@@ -19,6 +19,7 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/evaluados")
+@CrossOrigin(origins = "*")
 public class EvaluadoController {
 
     @Autowired
