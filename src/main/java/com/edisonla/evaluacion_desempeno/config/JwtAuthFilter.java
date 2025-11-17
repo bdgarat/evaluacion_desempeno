@@ -26,51 +26,45 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.Map;
-
 @Component
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Service
 public class JwtAuthFilter extends OncePerRequestFilter {
+
     @Autowired
     private JwtService jwtService;
+
     @Autowired
     private  UserDetailsService userDetailsService;
+
     @Autowired
     private TokenRepository tokenRepository;
+
     @Autowired
     private UsuarioRepository userRepository;
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().contains("/auth"))
-        {
-            filterChain.doFilter(request,response);
-            return ;
-        }
 
-        String authHeader = request.getParameter("token");
-        if(authHeader== null || !authHeader.startsWith("Bearer "))
-        {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if(authHeader== null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request,response);
             return;
         }
         String jwtToken = authHeader.substring(7);
         String userEmail = jwtService.extractUsername(jwtToken);
-        if(userEmail == null || SecurityContextHolder.getContext().getAuthentication()!=null)
-        {
+        if(userEmail == null || SecurityContextHolder.getContext().getAuthentication()!=null) {
             return;
         }
         Token token = tokenRepository.findByToken(jwtToken).orElse(null);
-        if(token ==null || token.isExpired() || token.isRevoked())
-        {
+        if(token ==null || token.isExpired() || token.isRevoked()) {
             filterChain.doFilter(request,response);
         }
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
         Optional<Usuario> user = userRepository.findByEmail(userDetails.getUsername());
-        if(user.isEmpty())
-        {
+        if(user.isEmpty()) {
             filterChain.doFilter(request,response);
             return;
         }
@@ -83,4 +77,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request,response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/api/auth/") || path.equals("/api/health");
+    }
 }
+

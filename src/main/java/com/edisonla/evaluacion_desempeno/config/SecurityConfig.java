@@ -23,16 +23,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
+
     @Autowired
     private AuthenticationProvider authenticationProvider;
+
     @Autowired
     private TokenRepository tokenRepository;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
-    {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req->req
                         .requestMatchers("/api/auth/**").permitAll()
@@ -55,10 +57,9 @@ public class SecurityConfig {
 
         return http.build();
     }
-    private void logout(String token)
-    {
-        if(token == null || ! token.startsWith("Bearer "))
-        {
+
+    private void logout(String token) {
+        if(token == null || ! token.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Invalid Token");
         }
         String jwtToken = token.substring(7);

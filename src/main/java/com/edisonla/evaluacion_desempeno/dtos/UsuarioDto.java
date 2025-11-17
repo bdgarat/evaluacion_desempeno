@@ -1,4 +1,4 @@
 package com.edisonla.evaluacion_desempeno.dtos;
 
-public class UsuarioDto {
+public record UsuarioDto() {
 }

@@ -28,8 +28,8 @@ public class Usuario {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "admin")
-    private boolean admin;
+    @Column(name = "roles")
+    private String roles;
 
     // Todos los evaluados donde este usuario es el evaluador
     @OneToMany(mappedBy = "evaluador", fetch = FetchType.LAZY)

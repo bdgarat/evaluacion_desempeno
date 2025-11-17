@@ -29,10 +29,10 @@ public class AuthService {
     private  PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UsuarioRepository userRepository;
+    private  UsuarioRepository userRepository;
 
     @Autowired
-    private TokenRepository tokenRepository;
+    private  TokenRepository tokenRepository;
 
     @Autowired(required = true)
     private  JwtService jwtService;
@@ -40,9 +40,8 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
     public TokenResponse register(RegisterRequest request) {
-        Usuario user = new Usuario();
+        var user = new Usuario();
         user.setUsername(request.username());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
@@ -60,7 +59,7 @@ public class AuthService {
                         request.password()
                 )
         );
-        Usuario user = userRepository.findByEmail(request.email()).orElseThrow();
+        var user = userRepository.findByEmail(request.email()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokedAllUserTokens(user);
@@ -68,9 +67,7 @@ public class AuthService {
         return new TokenResponse(jwtToken,refreshToken);
     }
 
-    public ResponseEntity<TokenResponse> refreshToken(Map<String, String> params) {
-        String authHeader = params.get("token");
-
+    public ResponseEntity<TokenResponse> refreshToken(String authHeader) {
         if(authHeader ==null || !authHeader.startsWith("Bearer "))
         {
             throw new IllegalArgumentException("Invalid Bearer token");
@@ -116,7 +113,6 @@ public class AuthService {
             tokenRepository.saveAll(validUserTokens);
         }
     }
-
     public Integer validate(String token) {
         if(jwtService.isTokenExpired(token))
         {

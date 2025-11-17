@@ -6,10 +6,10 @@ import com.edisonla.evaluacion_desempeno.dtos.TokenResponse;
 import com.edisonla.evaluacion_desempeno.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -22,28 +22,24 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register (@RequestBody final RegisterRequest request)
-    {
+    public ResponseEntity<TokenResponse> register (@RequestBody final RegisterRequest request) {
         final TokenResponse token = service.register(request);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/login")
-    public final ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request)
-    {
+    public final ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request) {
         final TokenResponse token = service.login(request);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<TokenResponse> refreshToken(@RequestParam Map<String, String> params )
-    {
-        return service.refreshToken(params);
+    public ResponseEntity<TokenResponse> refreshToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = true) String token) {
+        return service.refreshToken(token);
     }
 
     @GetMapping("/validate")
-    public Integer validate(@RequestParam String token)
-    {
+    public Integer validate(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = true) String token) {
         return service.validate(token);
     }
 }
