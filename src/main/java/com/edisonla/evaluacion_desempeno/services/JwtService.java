@@ -83,7 +83,7 @@ public class JwtService {
         }
     }
 
-    private String normalizeToken(String token) {
+    public String normalizeToken(String token) {
         if(token== null || !token.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Token invalido");
         }

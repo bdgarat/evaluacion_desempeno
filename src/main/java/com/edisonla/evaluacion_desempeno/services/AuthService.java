@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -74,27 +75,21 @@ public class AuthService {
     }
 
     public ResponseEntity<TokenResponse> refreshToken(String authHeader) {
-        if(authHeader ==null || !authHeader.startsWith("Bearer "))
-        {
-            throw new IllegalArgumentException("Invalid Bearer token");
-        }
-        String refreshToken = authHeader.substring(7);
-        String userEmail = jwtService.extractEmail(refreshToken);
-        if(userEmail == null )
-        {
+        String userEmail = "";
+        userEmail = jwtService.extractEmail(authHeader);
+        if(userEmail == null || userEmail == "") {
             throw new IllegalArgumentException("Invalid refresh token");
         }
+        String finalUserEmail = userEmail;
         Usuario user = userRepository.findByEmail(userEmail)
-                .orElseThrow(()-> new UsernameNotFoundException(userEmail));
-        if(!jwtService.isValidToken(refreshToken,user))
-        {
+                .orElseThrow(()-> new UsernameNotFoundException(finalUserEmail));
+        if(!jwtService.isValidToken(authHeader,user)) {
             throw new IllegalArgumentException("Invalid Refresh Token");
         }
         String accessToken = jwtService.generateToken(user);
         revokedAllUserTokens(user);
         saveUserToken(user,accessToken);
-        return  ResponseEntity.ok(new TokenResponse(accessToken,refreshToken));
-
+        return  ResponseEntity.ok(new TokenResponse(accessToken, jwtService.normalizeToken(authHeader)));
     }
 
     private void saveUserToken(Usuario user, String jwtToken) {

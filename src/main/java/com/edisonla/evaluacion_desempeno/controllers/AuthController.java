@@ -4,11 +4,15 @@ import com.edisonla.evaluacion_desempeno.dtos.LoginRequest;
 import com.edisonla.evaluacion_desempeno.dtos.RegisterRequest;
 import com.edisonla.evaluacion_desempeno.dtos.TokenResponse;
 import com.edisonla.evaluacion_desempeno.services.AuthService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 @RestController
@@ -22,24 +26,28 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register (@RequestBody final RegisterRequest request) {
+    public ResponseEntity<Object> register (@RequestBody final RegisterRequest request) {
         final TokenResponse token = service.register(request);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/login")
-    public final ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request) {
+    public final ResponseEntity<Object> authenticate(@RequestBody final LoginRequest request) {
         final TokenResponse token = service.login(request);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<TokenResponse> refreshToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = true) String token) {
-        return service.refreshToken(token);
+    public ResponseEntity<Object> refreshToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = true) String token) {
+        try {
+            return ResponseEntity.ok(service.refreshToken(token));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @GetMapping("/validate")
-    public Integer validate(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = true) String token) {
-        return service.validate(token);
+    public ResponseEntity<Object> validate(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = true) String token) {
+        return ResponseEntity.ok(service.validate(token));
     }
 }
