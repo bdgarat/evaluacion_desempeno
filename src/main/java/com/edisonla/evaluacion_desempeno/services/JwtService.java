@@ -6,6 +6,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -14,11 +16,17 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@PropertySource("classpath:application.properties")
 public class JwtService {
 
-    private long expirationToken = 86400000;
-    private long expirationRefreshToken = 604800000;
-    private String secretKey = "FSDKFJDSFKSJFSDJFDSLKFJDSKLFJDFJCVJCXKVJKJGFDSKFJDFSKLJEWROEW";
+    @Value("${access.token.expiration}")
+    private long expirationToken;
+
+    @Value("${refresh.token.expiration}")
+    private long expirationRefreshToken;
+
+    @Value("${secret.key}")
+    private String secretKey;
 
 
     public String generateToken(Usuario user)
