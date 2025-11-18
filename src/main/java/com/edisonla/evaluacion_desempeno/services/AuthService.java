@@ -79,7 +79,7 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid Bearer token");
         }
         String refreshToken = authHeader.substring(7);
-        String userEmail = jwtService.extractUsername(refreshToken);
+        String userEmail = jwtService.extractEmail(refreshToken);
         if(userEmail == null )
         {
             throw new IllegalArgumentException("Invalid refresh token");

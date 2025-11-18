@@ -53,14 +53,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("JwtAuthFilter - doFilterInternal called, tokenRegistration status: " + tokenRegistration);
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(authHeader== null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request,response);
+        // System.out.println("JwtAuthFilter - doFilterInternal called, tokenRegistration status: " + tokenRegistration);
+        String userEmail = "";
+        try {
+            userEmail = jwtService.extractEmail(request.getHeader(HttpHeaders.AUTHORIZATION));
+        } catch (IllegalArgumentException e) {
+            filterChain.doFilter(request, response);
             return;
         }
-        String jwtToken = authHeader.substring(7);
-        String userEmail = jwtService.extractUsername(jwtToken);
         if(userEmail == null || SecurityContextHolder.getContext().getAuthentication()!=null) {
             return;
         }
@@ -71,12 +71,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
         if(tokenRegistration) {
-            Token token = tokenRepository.findByToken(jwtToken).orElse(null);
+            Token token = tokenRepository.findByToken(request.getHeader(HttpHeaders.AUTHORIZATION).substring(7)).orElse(null);
             if (token == null || token.isExpired() || token.isRevoked()) {
                 filterChain.doFilter(request, response);
             }
         } else {
-            if(!jwtService.isValidToken(jwtToken, user.get())) {
+            if(!jwtService.isValidToken(request.getHeader(HttpHeaders.AUTHORIZATION), user.get())) {
                 filterChain.doFilter(request,response);
                 return;
             }

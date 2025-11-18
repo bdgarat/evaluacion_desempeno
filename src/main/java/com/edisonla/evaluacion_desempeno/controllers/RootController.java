@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 public class RootController {
     @GetMapping("/health")
-    public String vital()
+    public String health()
     {
-        return new String ("The service is alive");
+        return "The backend service is alive";
     }
 }

@@ -2,6 +2,7 @@ package com.edisonla.evaluacion_desempeno.services;
 
 import com.edisonla.evaluacion_desempeno.entities.Usuario;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -54,19 +55,44 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBates);
     }
 
-    public String extractUsername(String token) {
-        Claims jwtToken = Jwts.parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return jwtToken.getSubject();
+    public String extractEmail(String token) {
+        try {
+            String jwt = normalizeToken(token);
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(jwt)
+                    .getPayload();
+            return claims.getSubject();
+        } catch (JwtException | IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Token inválido o mal formado", ex);
+        }
+    }
 
+    public String extractUsername(String token) {
+        try {
+            String jwt = normalizeToken(token);
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(jwt)
+                    .getPayload();
+            return (String) claims.get("name");
+        } catch (JwtException | IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Token inválido o mal formado", ex);
+        }
+    }
+
+    private String normalizeToken(String token) {
+        if(token== null || !token.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Token invalido");
+        }
+        return token.substring(7);
     }
 
     public boolean isValidToken(String refreshToken, Usuario user) {
-        String username = extractUsername(refreshToken);
-        return (username.equals(user.getEmail()) && !isTokenExpired(refreshToken));
+        String userEmail = extractEmail(refreshToken);
+        return (userEmail.equals(user.getEmail()) && !isTokenExpired(refreshToken));
     }
 
     public boolean isTokenExpired(String token)
@@ -74,13 +100,26 @@ public class JwtService {
         return extractExpirationToken(token).before(new Date());
     }
 
-    private Date extractExpirationToken(String token) {
+    /*private Date extractExpirationToken(String token) {
         Claims jwtToken = Jwts.parser()
                 .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
         return jwtToken.getExpiration();
+    } */
+    private Date extractExpirationToken(String token) {
+        try {
+            String jwt = normalizeToken(token);
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(jwt)
+                    .getPayload();
+            return claims.getExpiration();
+        } catch (JwtException | IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Token inválido o mal formado", ex);
+        }
     }
 
 }
