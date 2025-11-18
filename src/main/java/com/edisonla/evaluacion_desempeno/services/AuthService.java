@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +43,7 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
 
     @Value("${jwt.token.registration}")
-    private static boolean tokenRegistration;
+    private boolean tokenRegistration;
 
 
     public TokenResponse register(RegisterRequest request) {

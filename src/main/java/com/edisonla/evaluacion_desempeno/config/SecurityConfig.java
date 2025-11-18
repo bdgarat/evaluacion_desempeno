@@ -37,7 +37,7 @@ public class SecurityConfig {
     private TokenRepository tokenRepository;
 
     @Value("${jwt.token.registration}")
-    private static boolean tokenRegistration;
+    private boolean tokenRegistration;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
