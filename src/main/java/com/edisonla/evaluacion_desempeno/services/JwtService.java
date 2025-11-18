@@ -19,13 +19,13 @@ import java.util.Map;
 @PropertySource("classpath:application.properties")
 public class JwtService {
 
-    @Value("${access.token.expiration}")
+    @Value("${jwt.access.token.expiration}")
     private long expirationToken;
 
-    @Value("${refresh.token.expiration}")
+    @Value("${jwt.refresh.token.expiration}")
     private long expirationRefreshToken;
 
-    @Value("${secret.key}")
+    @Value("${jwt.secret.key}")
     private String secretKey;
 
 

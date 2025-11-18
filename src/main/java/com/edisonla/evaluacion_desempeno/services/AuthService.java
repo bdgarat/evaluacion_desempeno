@@ -10,6 +10,8 @@ import com.edisonla.evaluacion_desempeno.repositories.UsuarioRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +25,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @AllArgsConstructor
+@PropertySource("classpath:application.properties")
 public class AuthService {
 
     @Autowired
@@ -39,6 +42,10 @@ public class AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Value("${jwt.token.registration}")
+    private static boolean tokenRegistration;
+
 
     public TokenResponse register(RegisterRequest request) {
         var user = new Usuario();
@@ -92,25 +99,27 @@ public class AuthService {
     }
 
     private void saveUserToken(Usuario user, String jwtToken) {
-        Token token = new Token();
-        token.setUser(user);
-        token.setToken(jwtToken);
-        token.setTokenType(Token.TokenType.BEARER);
-        token.setRevoked(false);
-        token.setExpired(false);
-        tokenRepository.save(token);
+        if(tokenRegistration) {
+            Token token = new Token();
+            token.setUser(user);
+            token.setToken(jwtToken);
+            token.setTokenType(Token.TokenType.BEARER);
+            token.setRevoked(false);
+            token.setExpired(false);
+            tokenRepository.save(token);
+        }
     }
 
     private void revokedAllUserTokens(Usuario users) {
-        List<Token> validUserTokens = tokenRepository.findAllValidIsFalseOrRevokedIsFalseByUserId(users.getId());
-        if(!validUserTokens.isEmpty())
-        {
-            for(Token token:validUserTokens)
-            {
-                token.setExpired(true);
-                token.setRevoked(true);
+        if(tokenRegistration) {
+            List<Token> validUserTokens = tokenRepository.findAllValidIsFalseOrRevokedIsFalseByUserId(users.getId());
+            if (!validUserTokens.isEmpty()) {
+                for (Token token : validUserTokens) {
+                    token.setExpired(true);
+                    token.setRevoked(true);
+                }
+                tokenRepository.saveAll(validUserTokens);
             }
-            tokenRepository.saveAll(validUserTokens);
         }
     }
     public Integer validate(String token) {

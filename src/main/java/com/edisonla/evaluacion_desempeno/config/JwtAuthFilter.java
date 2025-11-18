@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +32,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Service
+@PropertySource("classpath:application.properties")
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -43,6 +46,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private UsuarioRepository userRepository;
+
+    @Value("${jwt.token.registration}")
+    private static boolean tokenRegistration;
 
 
     @Override
@@ -58,15 +64,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if(userEmail == null || SecurityContextHolder.getContext().getAuthentication()!=null) {
             return;
         }
-        Token token = tokenRepository.findByToken(jwtToken).orElse(null);
-        if(token ==null || token.isExpired() || token.isRevoked()) {
-            filterChain.doFilter(request,response);
-        }
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
         Optional<Usuario> user = userRepository.findByEmail(userDetails.getUsername());
         if(user.isEmpty()) {
             filterChain.doFilter(request,response);
             return;
+        }
+        if(tokenRegistration) {
+            Token token = tokenRepository.findByToken(jwtToken).orElse(null);
+            if (token == null || token.isExpired() || token.isRevoked()) {
+                filterChain.doFilter(request, response);
+            }
+        } else {
+            if(!jwtService.isValidToken(jwtToken, user.get())) {
+                filterChain.doFilter(request,response);
+                return;
+            }
         }
         var authToken = new UsernamePasswordAuthenticationToken(
                 userDetails,
