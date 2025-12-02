@@ -43,17 +43,17 @@ public class Evaluacion {
 
     //clave foranea hacia user (rol evaluado)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USUARIO_ID")
+    @JoinColumn(name = "evaluado_id")
     private Usuario evaluado;
 
     //clave foranea hacia user (rol evaluador)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USUARIO_ID")
+    @JoinColumn(name = "evaluador_id")
     private Usuario evaluador;
 
     //clave foranea hacia user (rol validador)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USUARIO_ID")
+    @JoinColumn(name = "validador_id")
     private Usuario validador;
 
 

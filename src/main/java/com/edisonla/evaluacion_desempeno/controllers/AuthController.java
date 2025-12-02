@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -38,16 +39,19 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<Object> refreshToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = true) String token) {
+    public ResponseEntity<Object> refreshAccessToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String accessToken,
+                                               @RequestBody String refreshToken) {
         try {
-            return ResponseEntity.ok(service.refreshToken(token));
+            return ResponseEntity.ok(service.refreshAccessToken(accessToken, refreshToken));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
         }
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<Object> validate(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = true) String token) {
+    public ResponseEntity<Object> validate(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(service.validate(token));
     }
 }

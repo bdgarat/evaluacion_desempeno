@@ -1,4 +1,6 @@
 package com.edisonla.evaluacion_desempeno.dtos;
 
-public record RegisterRequest(String email, String password, String username) {
+import java.util.Date;
+
+public record RegisterRequest(String email, String password, String username, String legajo, String cuil, Date incorporacion) {
 }

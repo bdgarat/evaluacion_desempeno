@@ -21,7 +21,7 @@ import java.util.Map;
 public class JwtService {
 
     @Value("${jwt.access.token.expiration}")
-    private long expirationToken;
+    private long expirationAccessToken;
 
     @Value("${jwt.refresh.token.expiration}")
     private long expirationRefreshToken;
@@ -30,9 +30,9 @@ public class JwtService {
     private String secretKey;
 
 
-    public String generateToken(Usuario user)
+    public String generateAccessToken(Usuario user)
     {
-        return buildToken(user,expirationToken);
+        return buildToken(user,expirationAccessToken);
     }
 
     public String generateRefreshToken(Usuario user)
@@ -90,13 +90,12 @@ public class JwtService {
         return token.substring(7);
     }
 
-    public boolean isValidToken(String refreshToken, Usuario user) {
-        String userEmail = extractEmail(refreshToken);
-        return (userEmail.equals(user.getEmail()) && !isTokenExpired(refreshToken));
+    public boolean isValidToken(String token, Usuario user) {
+        String userEmail = extractEmail(token);
+        return (userEmail.equals(user.getEmail()) && !isTokenExpired(token));
     }
 
-    public boolean isTokenExpired(String token)
-    {
+    public boolean isTokenExpired(String token) {
         return extractExpirationToken(token).before(new Date());
     }
 
