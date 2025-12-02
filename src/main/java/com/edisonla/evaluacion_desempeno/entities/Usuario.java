@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -19,10 +20,10 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "password")
@@ -31,12 +32,25 @@ public class Usuario {
     @Column(name = "roles")
     private String roles;
 
-    // Todos los evaluados donde este usuario es el evaluador
+    @Column(name = "incorporacion")
+    private Date incorporacion;
+
+    @Column(name = "legajo")
+    private int legajo;
+
+    @Column(name = "cuil")
+    private String cuil;
+
+
+    // Todas las evaluaciones donde este usuario es el evaluador
     @OneToMany(mappedBy = "evaluador", fetch = FetchType.LAZY)
-    private List<Evaluado> evaluaciones = new ArrayList<>();
+    private List<Evaluacion> evaluacionesAjenas = new ArrayList<>();
 
-    // Todos los evaluados donde este usuario es el validador
+    // Todas las evaluaciones donde este usuario es el validador
     @OneToMany(mappedBy = "validador", fetch = FetchType.LAZY)
-    private List<Evaluado> validaciones = new ArrayList<>();
+    private List<Evaluacion> validaciones = new ArrayList<>();
 
+    // Todas las evaluaciones donde este usuario es el evaluado
+    @OneToMany(mappedBy = "validador", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Evaluacion> evaluacionesPropias = new ArrayList<>();
 }

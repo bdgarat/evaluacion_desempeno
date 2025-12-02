@@ -16,7 +16,7 @@ public class Comportamiento {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @Column(name = "descripcion")
@@ -25,21 +25,12 @@ public class Comportamiento {
     @Column(name = "calificacion")
     private double calificacion;
 
+    @Column(name = "idPregunta", nullable = false)
+    private String idPregunta;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "competencia_cuantitativa_id")
     @ToString.Exclude
     private CompetenciaCuantitativa competenciaCuantitativa;
 
-
-    public Comportamiento(String nombre, String descripcion, double calificacion) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.calificacion = calificacion;
-    }
-    public Comportamiento(Long id, String nombre, String descripcion, double calificacion) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.calificacion = calificacion;
-    }
 }

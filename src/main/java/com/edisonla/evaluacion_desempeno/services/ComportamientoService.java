@@ -4,7 +4,6 @@ import com.edisonla.evaluacion_desempeno.dtos.ComportamientoDto;
 import com.edisonla.evaluacion_desempeno.dtos.ComportamientoRequest;
 import com.edisonla.evaluacion_desempeno.entities.CompetenciaCuantitativa;
 import com.edisonla.evaluacion_desempeno.entities.Comportamiento;
-import com.edisonla.evaluacion_desempeno.entities.Evaluado;
 import com.edisonla.evaluacion_desempeno.mappers.*;
 import com.edisonla.evaluacion_desempeno.repositories.CompetenciaCuantitativaRepository;
 import com.edisonla.evaluacion_desempeno.repositories.ComportamientoRepository;
@@ -12,7 +11,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 @AllArgsConstructor

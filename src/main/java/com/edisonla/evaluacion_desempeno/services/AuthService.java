@@ -77,7 +77,7 @@ public class AuthService {
     public ResponseEntity<TokenResponse> refreshToken(String authHeader) {
         String userEmail = "";
         userEmail = jwtService.extractEmail(authHeader);
-        if(userEmail == null || userEmail == "") {
+        if(userEmail == null || userEmail.isEmpty()) {
             throw new IllegalArgumentException("Invalid refresh token");
         }
         String finalUserEmail = userEmail;

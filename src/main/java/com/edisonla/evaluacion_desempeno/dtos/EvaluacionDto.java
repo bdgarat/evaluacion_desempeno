@@ -2,7 +2,7 @@ package com.edisonla.evaluacion_desempeno.dtos;
 
 import java.util.Date;
 
-public record EvaluadoDto(
+public record EvaluacionDto(
         Long id,
         String dni,
         String cuil,

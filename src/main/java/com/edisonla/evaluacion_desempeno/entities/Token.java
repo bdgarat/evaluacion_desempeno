@@ -1,10 +1,11 @@
 package com.edisonla.evaluacion_desempeno.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+
+import jakarta.persistence.*;
+import lombok.*;
 
 @Builder
 @Getter
@@ -20,12 +21,20 @@ public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
-    @Column(unique = true)
+
+    @Column(name = "token", unique = true, nullable = false)
     public String token;
+
+    @Column(name = "tokenType", nullable = false)
     @Enumerated(EnumType.STRING)
     public TokenType tokenType = TokenType.BEARER;
+
+    @Column(name = "revoked")
     public boolean revoked;
+
+    @Column(name = "expired")
     public boolean expired;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public Usuario user;

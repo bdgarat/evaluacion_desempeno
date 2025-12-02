@@ -16,7 +16,7 @@ public class CompetenciaCualitativa {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @Column(name = "descripcion")
@@ -28,24 +28,12 @@ public class CompetenciaCualitativa {
     @Column (name= "validado")
     private boolean validado;
 
+    @Column(name = "idPregunta", nullable = false)
+    private String idPregunta;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "evaluado_id")
     @ToString.Exclude
-    private Evaluado evaluador;
+    private Evaluacion evaluacion;
 
-
-    public CompetenciaCualitativa(Long id, String nombre, String descripcion, String devolucion, boolean validado) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.devolucion = devolucion;
-        this.validado = validado;
-    }
-
-    public CompetenciaCualitativa(String nombre, String descripcion, String devolucion, boolean validado) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.devolucion = devolucion;
-        this.validado = validado;
-    }
 }

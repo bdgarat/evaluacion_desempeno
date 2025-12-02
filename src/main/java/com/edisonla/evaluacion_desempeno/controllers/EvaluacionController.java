@@ -1,41 +1,39 @@
 package com.edisonla.evaluacion_desempeno.controllers;
 
-import com.edisonla.evaluacion_desempeno.dtos.EvaluadoDto;
-import com.edisonla.evaluacion_desempeno.dtos.EvaluadoRequest;
-import com.edisonla.evaluacion_desempeno.services.EvaluadoService;
+import com.edisonla.evaluacion_desempeno.dtos.EvaluacionDto;
+import com.edisonla.evaluacion_desempeno.dtos.EvaluacionRequest;
+import com.edisonla.evaluacion_desempeno.services.EvaluacionService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/evaluados")
+@RequestMapping("/api/evaluaciones")
 @CrossOrigin(origins = "*")
-public class EvaluadoController {
+public class EvaluacionController {
 
     @Autowired
-    EvaluadoService service;
+    EvaluacionService service;
 
-    private static final String urlBase = "/api/evaluados";
+    private static final String urlBase = "/api/evaluaciones";
 
     @GetMapping
-    public Iterable<EvaluadoDto> getAll() {
+    public Iterable<EvaluacionDto> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> get(@PathVariable(name = "id") Long id) {
         try {
-            EvaluadoDto dto =  service.get(id);
+            EvaluacionDto dto =  service.get(id);
             return ResponseEntity.ok(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
@@ -43,18 +41,18 @@ public class EvaluadoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody EvaluadoRequest request,
+    public ResponseEntity<Object> create(@RequestBody EvaluacionRequest request,
                                               UriComponentsBuilder uriBuilder) {
 
-        EvaluadoDto dto = service.create(request);
+        EvaluacionDto dto = service.create(request);
         URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(dto.id()).toUri();
         return ResponseEntity.created(location).body(dto);
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody EvaluadoRequest request) {
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody EvaluacionRequest request) {
         try {
-            EvaluadoRequest dto = service.update(id, request);
+            EvaluacionRequest dto = service.update(id, request);
             return ResponseEntity.ok(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
@@ -72,19 +70,6 @@ public class EvaluadoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
-        }
-    }
-
-
-
-
-    @PostMapping("/cargarNomina")
-    public ResponseEntity<String> cargoNomina(@RequestParam("file") MultipartFile file){
-        try{
-            service.addNomina(file);
-            return ResponseEntity.ok("Se cargo correctamente");
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body("Error al cargar CSV");
         }
     }
 }

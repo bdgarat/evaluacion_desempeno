@@ -100,14 +100,6 @@ public class JwtService {
         return extractExpirationToken(token).before(new Date());
     }
 
-    /*private Date extractExpirationToken(String token) {
-        Claims jwtToken = Jwts.parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return jwtToken.getExpiration();
-    } */
     private Date extractExpirationToken(String token) {
         try {
             String jwt = normalizeToken(token);

@@ -22,13 +22,13 @@ public class CompetenciaCuantitativa {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @Column(name = "descripcion")
     private String descripcion;
 
-    @Column(name = "fecha")
+    @Column(name = "fecha", nullable = false)
     private Date fecha;
 
     @Column(name = "resultado")
@@ -37,6 +37,9 @@ public class CompetenciaCuantitativa {
     @Column (name= "validado")
     private boolean validado;
 
+    @Column(name = "idPregunta", nullable = false)
+    private String idPregunta;
+
     @OneToMany(mappedBy = "competenciaCuantitativa", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Comportamiento> comportamientos = new ArrayList<>();
@@ -44,25 +47,7 @@ public class CompetenciaCuantitativa {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "evaluado_id")
     @ToString.Exclude
-    private Evaluado evaluador;
-
-
-    public CompetenciaCuantitativa(Long id, String nombre, String descripcion, Date fecha, double resultado, boolean validado) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.fecha = fecha;
-        this.resultado = resultado;
-        this.validado = validado;
-    }
-
-    public CompetenciaCuantitativa(String nombre, String descripcion, Date fecha, double resultado, boolean validado) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.fecha = fecha;
-        this.resultado = resultado;
-        this.validado = validado;
-    }
+    private Evaluacion evaluacion;
 
     public void addComportamiento(Comportamiento comportamiento) {
         this.comportamientos.add(comportamiento);
