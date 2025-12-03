@@ -8,6 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CompetenciaCuantitativaRepository extends JpaRepository<CompetenciaCuantitativa, Long> {
-    Optional<CompetenciaCuantitativa> findByNombre(String nombre);
-    List<CompetenciaCuantitativa> findAllByFecha(LocalDateTime fecha);
+    List<CompetenciaCuantitativa> findAllByEvaluacionId(Long evaluacionId);
 }

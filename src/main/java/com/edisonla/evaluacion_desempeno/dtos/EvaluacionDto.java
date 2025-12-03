@@ -1,22 +1,14 @@
 package com.edisonla.evaluacion_desempeno.dtos;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public record EvaluacionDto(
         Long id,
-        String dni,
-        String cuil,
         String nombre,
-        String apellido,
-        Date incorporacion,
-        int legajo,
+        LocalDate fecha,
+        String resultadoEscrito,
         String seniority,
+        double resultadoCalculado,
         String disponibilidad,
-        String mail,
-        String celula,
-        String equipoMetodologico,
-        String nuevoPuesto,
-        String puesto,
-        double resultadoFinal,
-        boolean esAdmin
-) {}
+        String puesto) {}

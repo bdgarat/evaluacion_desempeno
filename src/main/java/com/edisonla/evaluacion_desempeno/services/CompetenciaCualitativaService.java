@@ -1,11 +1,9 @@
 package com.edisonla.evaluacion_desempeno.services;
 
 import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaDto;
-import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaRequest;
 import com.edisonla.evaluacion_desempeno.entities.CompetenciaCualitativa;
 import com.edisonla.evaluacion_desempeno.entities.Evaluacion;
 import com.edisonla.evaluacion_desempeno.mappers.CompetenciaCualitativaMapper;
-import com.edisonla.evaluacion_desempeno.mappers.CompetenciaCualitativaRequestMapper;
 import com.edisonla.evaluacion_desempeno.repositories.CompetenciaCualitativaRepository;
 import com.edisonla.evaluacion_desempeno.repositories.EvaluacionRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +11,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -23,17 +24,21 @@ public class CompetenciaCualitativaService {
 
     @Autowired
     private final CompetenciaCualitativaMapper ccMapper;
-    @Autowired
-    private final CompetenciaCualitativaRequestMapper ccRequestMapper;
 
+    @Transactional(readOnly = true)
     public Iterable<CompetenciaCualitativaDto> getAll(Long evaluacionId) {
-        return repository.findAll()
+        /*return repository.findAll()
                 .stream()
                 .filter(cc -> cc.getEvaluacion().getId().equals(evaluacionId)) // Reemplazar por filtrar desde repo
                 .map(ccMapper::toDto) //method reference reemplazo de (evaluacionCualitativa -> evaluacionCualitativaMapper.toDto(evaluacionCualitativa))
+                .toList();*/
+        List<CompetenciaCualitativa> l =  repository.findAllByEvaluacionId(evaluacionId);
+        return l.stream()
+                .map(ccMapper::toDto)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public CompetenciaCualitativa get(Long evaluacionId, Long id) {
         CompetenciaCualitativa cc = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con id: " + id));
@@ -45,27 +50,30 @@ public class CompetenciaCualitativaService {
     }
 
     @Transactional
-    public CompetenciaCualitativaDto create(Long evaluacionId, CompetenciaCualitativaRequest dto) {
+    public CompetenciaCualitativaDto create(Long evaluacionId, CompetenciaCualitativaDto dto) {
         Evaluacion evaluacion = evaluacionRepository.findById(evaluacionId)
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con id: " + evaluacionId));
 
-        CompetenciaCualitativa entidad = ccRequestMapper.toEntity(dto);
+        CompetenciaCualitativa entidad = ccMapper.toEntity(dto);
+        entidad.setCreado(new Date());
+        entidad.setUltimaModificacion(new Date());
         evaluacion.addCompetenciaCualitativa(entidad); // Establece la relación bidireccional
         CompetenciaCualitativa res = repository.save(entidad);
         return ccMapper.toDto(res);
     }
 
     @Transactional
-    public CompetenciaCualitativaRequest update(Long evaluacionId, Long id, CompetenciaCualitativaRequest dto) {
+    public CompetenciaCualitativaDto update(Long evaluacionId, Long id, CompetenciaCualitativaDto dto) {
         CompetenciaCualitativa cc = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con id: " + id));
         if(!cc.getEvaluacion().getId().equals(evaluacionId)) {
             throw new IllegalArgumentException("Competencia Cualitativa " + id + " no pertenece a la evaluacion " + evaluacionId);
         } else {
-            CompetenciaCualitativa updated = ccRequestMapper.toEntity(dto);
+            CompetenciaCualitativa updated = ccMapper.toEntity(dto);
             updated.setId(cc.getId());
+            updated.setUltimaModificacion(new Date());
             CompetenciaCualitativa res = repository.save(updated);
-            return ccRequestMapper.toDto(res);
+            return ccMapper.toDto(res);
         }
     }
 

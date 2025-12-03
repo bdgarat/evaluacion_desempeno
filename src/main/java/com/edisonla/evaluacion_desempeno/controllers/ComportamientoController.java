@@ -1,7 +1,6 @@
 package com.edisonla.evaluacion_desempeno.controllers;
 
 import com.edisonla.evaluacion_desempeno.dtos.ComportamientoDto;
-import com.edisonla.evaluacion_desempeno.dtos.ComportamientoRequest;
 import com.edisonla.evaluacion_desempeno.entities.Comportamiento;
 import com.edisonla.evaluacion_desempeno.mappers.ComportamientoMapper;
 import com.edisonla.evaluacion_desempeno.services.ComportamientoService;
@@ -47,7 +46,7 @@ public class ComportamientoController {
 
     @PostMapping
     public ResponseEntity<Object> create(@PathVariable(name = "ccId") Long ccId,
-                                                    @RequestBody ComportamientoRequest request,
+                                                    @RequestBody ComportamientoDto request,
                                               UriComponentsBuilder uriBuilder) {
         try {
             ComportamientoDto dto = service.create(ccId, request);
@@ -61,9 +60,9 @@ public class ComportamientoController {
     @PutMapping ("/{id}")
     public ResponseEntity<Object> update(@PathVariable(name = "ccId") Long ccId,
                                                         @PathVariable Long id,
-                                                        @RequestBody ComportamientoRequest request) {
+                                                        @RequestBody ComportamientoDto request) {
         try {
-            ComportamientoRequest dto = service.update(ccId, id, request);
+            ComportamientoDto dto = service.update(ccId, id, request);
             return ResponseEntity.ok(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));

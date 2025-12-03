@@ -1,7 +1,6 @@
 package com.edisonla.evaluacion_desempeno.controllers;
 
 import com.edisonla.evaluacion_desempeno.dtos.EvaluacionDto;
-import com.edisonla.evaluacion_desempeno.dtos.EvaluacionRequest;
 import com.edisonla.evaluacion_desempeno.services.EvaluacionService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -41,7 +40,7 @@ public class EvaluacionController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody EvaluacionRequest request,
+    public ResponseEntity<Object> create(@RequestBody EvaluacionDto request,
                                               UriComponentsBuilder uriBuilder) {
 
         EvaluacionDto dto = service.create(request);
@@ -50,9 +49,9 @@ public class EvaluacionController {
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody EvaluacionRequest request) {
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody EvaluacionDto request) {
         try {
-            EvaluacionRequest dto = service.update(id, request);
+            EvaluacionDto dto = service.update(id, request);
             return ResponseEntity.ok(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));

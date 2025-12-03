@@ -2,7 +2,6 @@ package com.edisonla.evaluacion_desempeno.controllers;
 
 
 import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaDto;
-import com.edisonla.evaluacion_desempeno.dtos.CompetenciaCualitativaRequest;
 import com.edisonla.evaluacion_desempeno.entities.CompetenciaCualitativa;
 import com.edisonla.evaluacion_desempeno.services.CompetenciaCualitativaService;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,22 +18,22 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/evaluados/{evaluadoId}/competencias-cualitativas")
+@RequestMapping("/api/evaluaciones/{evaluacionId}/competencias-cualitativas")
 @CrossOrigin(origins = "*")
 public class CompetenciaCualitativaController {
 
     @Autowired
     CompetenciaCualitativaService service;
 
-    private static final String urlBase = "/api/evaluados/{evaluadoId}/competencias-cualitativas";
+    private static final String urlBase = "/api/evaluaciones/{evaluacionId}/competencias-cualitativas";
 
     @GetMapping
-    public Iterable<CompetenciaCualitativaDto> getAll(@PathVariable(name = "evaluadoId") Long evaluadoId) {
+    public Iterable<CompetenciaCualitativaDto> getAll(@PathVariable(name = "evaluacionId") Long evaluadoId) {
         return service.getAll(evaluadoId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> get(@PathVariable(name = "evaluadoId") Long evaluadoId,
+    public ResponseEntity<Object> get(@PathVariable(name = "evaluacionId") Long evaluadoId,
                                                          @PathVariable(name = "id") Long id) {
         try {
             CompetenciaCualitativa competenciaCualitativa =  service.get(evaluadoId, id);
@@ -45,8 +44,8 @@ public class CompetenciaCualitativaController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@PathVariable(name = "evaluadoId") Long evaluadoId,
-                                                            @RequestBody CompetenciaCualitativaRequest request,
+    public ResponseEntity<Object> create(@PathVariable(name = "evaluacionId") Long evaluadoId,
+                                                            @RequestBody CompetenciaCualitativaDto request,
                                                              UriComponentsBuilder uriBuilder) {
         try {
             CompetenciaCualitativaDto dto = service.create(evaluadoId, request);
@@ -58,11 +57,11 @@ public class CompetenciaCualitativaController {
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<Object> update(@PathVariable(name = "evaluadoId") Long evaluadoId,
+    public ResponseEntity<Object> update(@PathVariable(name = "evaluacionId") Long evaluadoId,
                                                                 @PathVariable Long id,
-                                                             @RequestBody CompetenciaCualitativaRequest request) {
+                                                             @RequestBody CompetenciaCualitativaDto request) {
         try {
-            CompetenciaCualitativaRequest dto = service.update(evaluadoId, id, request);
+            CompetenciaCualitativaDto dto = service.update(evaluadoId, id, request);
             return ResponseEntity.ok(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
@@ -72,7 +71,7 @@ public class CompetenciaCualitativaController {
     }
 
     @DeleteMapping ("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable(name = "evaluadoId") Long evaluadoId,
+    public ResponseEntity<Object> delete(@PathVariable(name = "evaluacionId") Long evaluadoId,
                                        @PathVariable Long id) {
         try {
             service.delete(evaluadoId, id);

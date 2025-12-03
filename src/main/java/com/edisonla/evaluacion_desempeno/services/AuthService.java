@@ -5,6 +5,7 @@ import com.edisonla.evaluacion_desempeno.dtos.RegisterRequest;
 import com.edisonla.evaluacion_desempeno.dtos.TokenResponse;
 import com.edisonla.evaluacion_desempeno.entities.Token;
 import com.edisonla.evaluacion_desempeno.entities.Usuario;
+import com.edisonla.evaluacion_desempeno.mappers.RegisterRequestMapper;
 import com.edisonla.evaluacion_desempeno.repositories.TokenRepository;
 import com.edisonla.evaluacion_desempeno.repositories.UsuarioRepository;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,13 +49,17 @@ public class AuthService {
 
     @Value("${jwt.token.registration}")
     private boolean tokenRegistration;
+    @Autowired
+    private RegisterRequestMapper registerRequestMapper;
 
 
+    @Transactional
     public TokenResponse register(RegisterRequest request) {
-        Usuario user = new Usuario();
-        user.setUsername(request.username());
-        user.setEmail(request.email());
+        Usuario user = registerRequestMapper.toEntity(request);
+        user.setCreado(new Date());
+        user.setUltimaModificacion(new Date());
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setId(null);
         Usuario saveUser = userRepository.save(user);
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
@@ -60,6 +67,7 @@ public class AuthService {
         return new TokenResponse(accessToken,refreshToken);
     }
 
+    @Transactional
     public TokenResponse login (LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -87,6 +95,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public TokenResponse refreshAccessToken(String expiredAccessToken, String refreshToken) {
         String userEmail = jwtService.extractEmail(expiredAccessToken);
         Optional<Usuario> user = userRepository.findByEmail(userEmail);

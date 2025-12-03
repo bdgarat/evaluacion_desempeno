@@ -3,6 +3,7 @@ package com.edisonla.evaluacion_desempeno.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Evaluacion {
     private String nombre;
 
     @Column(name = "fecha", nullable = false)
-    private Date fecha;
+    private LocalDate fecha;
 
     @Column(name = "resultadoCalculado")
     private double resultadoCalculado;
@@ -40,6 +41,13 @@ public class Evaluacion {
 
     @Column(name ="puesto", length = 24)
     private String puesto;
+
+    @Column(name = "creado", nullable = false)
+    private Date creado;
+
+    @Column(name = "ultimaModificacion",  nullable = false)
+    private Date ultimaModificacion;
+
 
     //clave foranea hacia user (rol evaluado)
     @ManyToOne(fetch = FetchType.EAGER)

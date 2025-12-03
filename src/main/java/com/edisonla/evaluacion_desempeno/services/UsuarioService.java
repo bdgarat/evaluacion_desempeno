@@ -8,7 +8,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.edisonla.evaluacion_desempeno.enums.Roles;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,6 +21,7 @@ public class UsuarioService {
     private final UsuarioMapper usuarioMapper;
     private final JwtService jwtService;
 
+    @Transactional(readOnly = true)
     public Iterable<UsuarioDto> getAll(String token) {
         Usuario me = repository.findByEmail(jwtService.extractEmail(token))
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con token: " + token));
@@ -33,21 +36,25 @@ public class UsuarioService {
         }
     }
 
+    @Transactional(readOnly = true)
     public UsuarioDto whoAmI(String token) {
         Usuario me = repository.findByEmail(jwtService.extractEmail(token))
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con token: " + token));
         return usuarioMapper.toDto(me);
     }
 
+    @Transactional
     public UsuarioDto updateMyself(String token, UsuarioDto dto) {
         Usuario me = repository.findByEmail(jwtService.extractEmail(token))
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con token: " + token));
         Usuario updated = usuarioMapper.toEntity(dto);
         updated.setId(me.getId());
+        updated.setUltimaModificacion(new Date());
         Usuario res = repository.save(updated);
         return usuarioMapper.toDto(res);
     }
 
+    @Transactional
     public void deleteMyself(String token) {
         Usuario me = repository.findByEmail(jwtService.extractEmail(token))
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con token: " + token));
