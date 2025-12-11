@@ -57,7 +57,8 @@ public class CompetenciaCualitativaService {
         CompetenciaCualitativa entidad = ccMapper.toEntity(dto);
         entidad.setCreado(new Date());
         entidad.setUltimaModificacion(new Date());
-        evaluacion.addCompetenciaCualitativa(entidad); // Establece la relación bidireccional
+        //evaluacion.addCompetenciaCualitativa(entidad); // Establece la relación bidireccional
+        entidad.setEvaluacion(evaluacion);
         CompetenciaCualitativa res = repository.save(entidad);
         return ccMapper.toDto(res);
     }
@@ -72,6 +73,7 @@ public class CompetenciaCualitativaService {
             CompetenciaCualitativa updated = ccMapper.toEntity(dto);
             updated.setId(cc.getId());
             updated.setUltimaModificacion(new Date());
+            updated.setEvaluacion(cc.getEvaluacion());
             CompetenciaCualitativa res = repository.save(updated);
             return ccMapper.toDto(res);
         }

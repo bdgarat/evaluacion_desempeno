@@ -1,5 +1,6 @@
 package com.edisonla.evaluacion_desempeno.controllers;
 
+import com.edisonla.evaluacion_desempeno.dtos.ChangePasswordRequest;
 import com.edisonla.evaluacion_desempeno.dtos.LoginRequest;
 import com.edisonla.evaluacion_desempeno.dtos.RegisterRequest;
 import com.edisonla.evaluacion_desempeno.dtos.TokenResponse;
@@ -53,5 +54,18 @@ public class AuthController {
     @GetMapping("/validate")
     public ResponseEntity<Object> validate(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(service.validate(token));
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<Object> changePassword(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token,
+                                                 @RequestBody ChangePasswordRequest req) {
+        try {
+            service.changePassword(token, req);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        }
     }
 }

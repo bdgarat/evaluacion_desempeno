@@ -1,5 +1,6 @@
 package com.edisonla.evaluacion_desempeno.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,7 @@ public class Comportamiento {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "competencia_cuantitativa_id")
+    @JsonBackReference
     @ToString.Exclude
     private CompetenciaCuantitativa competenciaCuantitativa;
 

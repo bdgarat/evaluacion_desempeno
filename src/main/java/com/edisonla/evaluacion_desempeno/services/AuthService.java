@@ -1,5 +1,6 @@
 package com.edisonla.evaluacion_desempeno.services;
 
+import com.edisonla.evaluacion_desempeno.dtos.ChangePasswordRequest;
 import com.edisonla.evaluacion_desempeno.dtos.LoginRequest;
 import com.edisonla.evaluacion_desempeno.dtos.RegisterRequest;
 import com.edisonla.evaluacion_desempeno.dtos.TokenResponse;
@@ -8,6 +9,7 @@ import com.edisonla.evaluacion_desempeno.entities.Usuario;
 import com.edisonla.evaluacion_desempeno.mappers.RegisterRequestMapper;
 import com.edisonla.evaluacion_desempeno.repositories.TokenRepository;
 import com.edisonla.evaluacion_desempeno.repositories.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,6 +116,21 @@ public class AuthService {
         }
         String newAccessToken = jwtService.generateAccessToken(user.get());
         return new TokenResponse(newAccessToken, refreshToken);
+    }
+
+    @Transactional
+    public void changePassword(String token, ChangePasswordRequest req) {
+        Usuario me = userRepository.findByEmail(jwtService.extractEmail(token))
+                .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con token: " + token));
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(!me.getPassword().equals(encoder.encode(req.repeatNewPassword()))) {
+            throw new IllegalArgumentException("La contraseña antigua no coincide con la provista");
+        }
+        if(!req.newPassword().equals(req.repeatNewPassword())) {
+            throw new IllegalArgumentException("La contraseñas no coinciden");
+        }
+        me.setPassword(encoder.encode(req.newPassword()));
+        userRepository.save(me);
     }
 
     private void saveUserToken(Usuario user, String jwtToken) {

@@ -1,10 +1,12 @@
 package com.edisonla.evaluacion_desempeno.controllers;
 
 import com.edisonla.evaluacion_desempeno.dtos.EvaluacionDto;
+import com.edisonla.evaluacion_desempeno.dtos.EvaluacionesResponse;
 import com.edisonla.evaluacion_desempeno.services.EvaluacionService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,19 @@ public class EvaluacionController {
             return ResponseEntity.ok(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/mis-evaluaciones")
+    public ResponseEntity<Object> getMisEvaluaciones(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) {
+        try {
+            EvaluacionesResponse response = service.getEvaluacionesByToken(token);
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -71,4 +86,6 @@ public class EvaluacionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
+
+
 }

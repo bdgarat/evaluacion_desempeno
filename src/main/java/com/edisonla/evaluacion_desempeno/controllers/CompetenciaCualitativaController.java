@@ -18,25 +18,25 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/evaluaciones/{evaluacionId}/competencias-cualitativas")
+@RequestMapping("/api/competencias-cualitativas")
 @CrossOrigin(origins = "*")
 public class CompetenciaCualitativaController {
 
     @Autowired
     CompetenciaCualitativaService service;
 
-    private static final String urlBase = "/api/evaluaciones/{evaluacionId}/competencias-cualitativas";
+    private static final String urlBase = "/api/competencias-cualitativas";
 
     @GetMapping
-    public Iterable<CompetenciaCualitativaDto> getAll(@PathVariable(name = "evaluacionId") Long evaluadoId) {
-        return service.getAll(evaluadoId);
+    public Iterable<CompetenciaCualitativaDto> getAll(@RequestParam(name = "evaluacion") Long evaluacionId) {
+        return service.getAll(evaluacionId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> get(@PathVariable(name = "evaluacionId") Long evaluadoId,
+    public ResponseEntity<Object> get(@RequestParam(name = "evaluacion") Long evaluacionId,
                                                          @PathVariable(name = "id") Long id) {
         try {
-            CompetenciaCualitativa competenciaCualitativa =  service.get(evaluadoId, id);
+            CompetenciaCualitativa competenciaCualitativa =  service.get(evaluacionId, id);
             return ResponseEntity.ok(competenciaCualitativa);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
@@ -44,12 +44,12 @@ public class CompetenciaCualitativaController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@PathVariable(name = "evaluacionId") Long evaluadoId,
+    public ResponseEntity<Object> create(@RequestParam(name = "evaluacion") Long evaluacionId,
                                                             @RequestBody CompetenciaCualitativaDto request,
                                                              UriComponentsBuilder uriBuilder) {
         try {
-            CompetenciaCualitativaDto dto = service.create(evaluadoId, request);
-            URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(evaluadoId, dto.id()).toUri();
+            CompetenciaCualitativaDto dto = service.create(evaluacionId, request);
+            URI location = uriBuilder.path(urlBase + "/{id}").buildAndExpand(evaluacionId, dto.id()).toUri();
             return ResponseEntity.created(location).body(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
@@ -57,11 +57,11 @@ public class CompetenciaCualitativaController {
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<Object> update(@PathVariable(name = "evaluacionId") Long evaluadoId,
+    public ResponseEntity<Object> update(@RequestParam(name = "evaluacion") Long evaluacionId,
                                                                 @PathVariable Long id,
                                                              @RequestBody CompetenciaCualitativaDto request) {
         try {
-            CompetenciaCualitativaDto dto = service.update(evaluadoId, id, request);
+            CompetenciaCualitativaDto dto = service.update(evaluacionId, id, request);
             return ResponseEntity.ok(dto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
@@ -71,10 +71,10 @@ public class CompetenciaCualitativaController {
     }
 
     @DeleteMapping ("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable(name = "evaluacionId") Long evaluadoId,
+    public ResponseEntity<Object> delete(@RequestParam(name = "evaluacion") Long evaluacionId,
                                        @PathVariable Long id) {
         try {
-            service.delete(evaluadoId, id);
+            service.delete(evaluacionId, id);
             return ResponseEntity.noContent().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));

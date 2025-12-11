@@ -1,5 +1,6 @@
 package com.edisonla.evaluacion_desempeno.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,6 +41,7 @@ public class CompetenciaCualitativa {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "evaluado_id")
     @ToString.Exclude
+    @JsonBackReference
     private Evaluacion evaluacion;
 
 }

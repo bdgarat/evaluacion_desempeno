@@ -1,5 +1,6 @@
 package com.edisonla.evaluacion_desempeno.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,12 @@ public class Usuario {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    @Column(name = "nombre")
+    private String nombre;
+
+    @Column (name = "apellido")
+    private String apellido;
+
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
@@ -36,17 +43,11 @@ public class Usuario {
     @Column(name = "incorporacion")
     private LocalDate incorporacion;
 
-    @Column(name = "legajo")
+    @Column(name = "legajo", unique = true, nullable = false)
     private int legajo;
 
-    @Column(name = "cuil")
+    @Column(name = "cuil", unique = true, nullable = false)
     private String cuil;
-
-    @Column(name = "nombre")
-    private String nombre;
-
-    @Column(name = "apellido")
-    private String apellido;
 
     @Column(name = "creado", nullable = false)
     private Date creado;
@@ -56,13 +57,40 @@ public class Usuario {
 
     // Todas las evaluaciones donde este usuario es el evaluador
     @OneToMany(mappedBy = "evaluador", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @ToString.Exclude
+    @Builder.Default
+    @Setter(AccessLevel.NONE)
     private List<Evaluacion> evaluacionesAjenas = new ArrayList<>();
 
     // Todas las evaluaciones donde este usuario es el validador
     @OneToMany(mappedBy = "validador", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @ToString.Exclude
+    @Builder.Default
+    @Setter(AccessLevel.NONE)
     private List<Evaluacion> validaciones = new ArrayList<>();
 
     // Todas las evaluaciones donde este usuario es el evaluado
-    @OneToMany(mappedBy = "validador", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "evaluado", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @ToString.Exclude
+    @Builder.Default
+    @Setter(AccessLevel.NONE)
     private List<Evaluacion> evaluacionesPropias = new ArrayList<>();
+
+    /*public void addEvaluado(Evaluacion e) {
+        this.evaluacionesPropias.add(e);
+        e.setEvaluado(this);
+    }
+
+    public void addEvaluador(Evaluacion e) {
+        this.evaluacionesAjenas.add(e);
+        e.setEvaluador(this);
+    }
+
+    public void addValidador(Evaluacion e) {
+        this.validaciones.add(e);
+        e.setValidador(this);
+    }*/
 }

@@ -51,7 +51,8 @@ public class ComportamientoService {
         CompetenciaCuantitativa cc = competenciaCuantitativaRepository.findById(ccId)
                 .orElseThrow(() -> new EntityNotFoundException("Competencia Cuantitativa no encontrada: " + ccId));
         Comportamiento comp = comportamientoMapper.toEntity(dto);
-        cc.addComportamiento(comp); // Establece la relación bidireccional
+        //cc.addComportamiento(comp); // Establece la relación bidireccional
+        comp.setCompetenciaCuantitativa(cc);
         comp.setCreado(new Date());
         comp.setUltimaModificacion(new Date());
         Comportamiento res = repository.save(comp);
@@ -68,6 +69,7 @@ public class ComportamientoService {
             Comportamiento updated = comportamientoMapper.toEntity(dto);
             updated.setId(original.getId());
             updated.setUltimaModificacion(new Date());
+            updated.setCompetenciaCuantitativa(original.getCompetenciaCuantitativa());
             Comportamiento res = repository.save(updated);
             return comportamientoMapper.toDto(res);
         }

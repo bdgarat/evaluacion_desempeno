@@ -54,7 +54,8 @@ public class CompetenciaCuantitativaService {
         CompetenciaCuantitativa entidad = ccMapper.toEntity(dto);
         entidad.setCreado(new Date());
         entidad.setUltimaModificacion(new Date());
-        evaluacion.addCompetenciaCuantitativa(entidad); // Establece la relación bidireccional
+        //evaluacion.addCompetenciaCuantitativa(entidad); // Establece la relación bidireccional
+        entidad.setEvaluacion(evaluacion);
         CompetenciaCuantitativa res = repository.save(entidad);
         return ccMapper.toDto(res);
     }
@@ -69,6 +70,7 @@ public class CompetenciaCuantitativaService {
             CompetenciaCuantitativa updated = ccMapper.toEntity(dto);
             updated.setId(cc.getId());
             updated.setUltimaModificacion(new Date());
+            updated.setEvaluacion(cc.getEvaluacion());
             CompetenciaCuantitativa res = repository.save(updated);
             return ccMapper.toDto(res);
         }

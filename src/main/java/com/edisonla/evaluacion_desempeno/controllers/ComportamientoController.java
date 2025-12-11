@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/competencias-cuantitativas/{ccId}/comportamientos")
+@RequestMapping("/api/comportamientos")
 @CrossOrigin(origins = "*")
 public class ComportamientoController {
 
@@ -26,15 +26,15 @@ public class ComportamientoController {
 
     private final ComportamientoMapper comportamientoMapper;
 
-    private static final String urlBase = "/api/competencias-cuantitativas/{ccId}/comportamientos";
+    private static final String urlBase = "/api/comportamientos";
 
     @GetMapping
-    public Iterable<ComportamientoDto> getAll(@PathVariable(name = "ccId") Long ccId) {
+    public Iterable<ComportamientoDto> getAll(@RequestParam(name = "competencia-cuantitativa") Long ccId) {
         return service.getAll(ccId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> get(@PathVariable(name = "ccId") Long ccId,
+    public ResponseEntity<Object> get(@RequestParam(name = "competencia-cuantitativa") Long ccId,
                                                  @PathVariable long id) {
         try {
             Comportamiento comportamiento = service.get(ccId, id);
@@ -45,7 +45,7 @@ public class ComportamientoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@PathVariable(name = "ccId") Long ccId,
+    public ResponseEntity<Object> create(@RequestParam(name = "competencia-cuantitativa") Long ccId,
                                                     @RequestBody ComportamientoDto request,
                                               UriComponentsBuilder uriBuilder) {
         try {
@@ -58,7 +58,7 @@ public class ComportamientoController {
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<Object> update(@PathVariable(name = "ccId") Long ccId,
+    public ResponseEntity<Object> update(@RequestParam(name = "competencia-cuantitativa") Long ccId,
                                                         @PathVariable Long id,
                                                         @RequestBody ComportamientoDto request) {
         try {
@@ -72,7 +72,7 @@ public class ComportamientoController {
     }
 
     @DeleteMapping ("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable(name = "ccId") Long ccId,
+    public ResponseEntity<Object> delete(@RequestParam(name = "competencia-cuantitativa") Long ccId,
                                        @PathVariable Long id) {
         try {
             service.delete(ccId, id);

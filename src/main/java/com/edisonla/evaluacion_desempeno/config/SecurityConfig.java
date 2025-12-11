@@ -37,9 +37,6 @@ public class SecurityConfig {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @Autowired
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
-
     @Value("${jwt.token.registration}")
     private boolean tokenRegistration;
 
