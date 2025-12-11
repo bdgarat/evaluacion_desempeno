@@ -122,14 +122,13 @@ public class AuthService {
     public void changePassword(String token, ChangePasswordRequest req) {
         Usuario me = userRepository.findByEmail(jwtService.extractEmail(token))
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con token: " + token));
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(!me.getPassword().equals(encoder.encode(req.repeatNewPassword()))) {
+        if(!passwordEncoder.matches(req.repeatNewPassword(), me.getPassword())) {
             throw new IllegalArgumentException("La contraseña antigua no coincide con la provista");
         }
         if(!req.newPassword().equals(req.repeatNewPassword())) {
             throw new IllegalArgumentException("La contraseñas no coinciden");
         }
-        me.setPassword(encoder.encode(req.newPassword()));
+        me.setPassword(passwordEncoder.encode(req.newPassword()));
         userRepository.save(me);
     }
 

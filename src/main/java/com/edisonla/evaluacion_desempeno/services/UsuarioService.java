@@ -41,7 +41,7 @@ public class UsuarioService {
     public boolean checkIsAdmin(String token) {
         Usuario me = repository.findByEmail(jwtService.extractEmail(token))
                 .orElseThrow(() -> new EntityNotFoundException("No se encontro el elemento con token: " + token));
-        return (me.getRoles() != null && me.getRoles().contains(Roles.ADMIN.toString()));
+        return (me.getRoles() != null && me.getRoles().toLowerCase().contains(Roles.ADMIN.toString().toLowerCase()));
     }
 
     @Transactional(readOnly = true)
